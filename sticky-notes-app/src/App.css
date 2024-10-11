@@ -81,6 +81,12 @@ button:hover{
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
   cursor: pointer;
 }
+.note-item select{
+  background-color: #3ab8fb;
+  text-align: left;
+  width: 100%;
+  border-top: dotted;
+}
 
 .note-header{
   display: flex;

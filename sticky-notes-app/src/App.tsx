@@ -10,7 +10,6 @@ function App() {
 
   // Manage the list of favorite notes in state
   const [favNotesList, setFavNotesList] = useState<number[]>([]);
-  const [favTitleList, setFavTitleList] = useState<string[]>([]);
 
   // Favorite/Unfavorite Note Button
   function ClickHeart({ note }: { note: Note }) {
@@ -26,14 +25,12 @@ function App() {
       if (favNote && !favNotesList.includes(note.id)) {
         // Add to favorites if not already in list
         setFavNotesList((prev) => [...prev, note.id]);
-        setFavTitleList((prev) => [...prev, note.title]);
       } else if (!favNote && favNotesList.includes(note.id) ) {
         // Remove from favorites
         setFavNotesList((prev) => prev.filter((checkedNote) => checkedNote !== note.id));
-        setFavTitleList((prev) => prev.filter((checkedNote) => checkedNote !== note.title));
 
       }
-    }, [favNote, note.id, favNotesList, favTitleList]);
+    }, [favNote, note.id, favNotesList]);
 
     return (
       <button
@@ -71,10 +68,14 @@ function App() {
     //Delete if it is also in favorite list
     if(favNotesList.includes(delNote.id)){
       setFavNotesList((prevNotes) => prevNotes.filter((note) => note !== delNote.id))
-      setFavTitleList((prevNotes) => prevNotes.filter((note) => note !== delNote.title))
-
     }
   };
+
+  //Update note
+  const editNoteHandler = (editedNote: Note) => {
+    setNotes((prev)=>prev.map((note)=>editedNote.id === note.id? editedNote : note));
+  };
+
 
 
   return (
@@ -134,9 +135,32 @@ function App() {
               <ClickHeart note={note} />
               <button id="close-button" onClick={()=>deleteNoteHandler(note)}>x</button>
             </div>
-            <h2 contentEditable="true">{note.title}</h2>
-            <p contentEditable="true">{note.content}</p>
-            <p contentEditable="true">{note.label}</p>
+            <h2 contentEditable="true"
+                onBlur={(event)=>editNoteHandler({
+                  ...note,
+                  title: event.currentTarget.textContent || ""})}>
+              {note.title}
+            </h2>
+            <p contentEditable="true"
+              onBlur={(event)=>editNoteHandler({
+              ...note,
+              content: event.currentTarget.textContent || ""})}>
+                {note.content}
+            </p>
+            <select
+            value={note.label}
+            onChange={(event) =>
+              editNoteHandler({
+                ...note,
+                label: event.target.value as Label,
+              })
+            }>
+              <option value={Label.other}>Other</option>
+              <option value={Label.personal}>Personal</option>
+              <option value={Label.study}>Study</option>
+              <option value={Label.work}>Work</option>
+            </select>    
+            
           </div>
         ))}
       </div>
@@ -144,8 +168,9 @@ function App() {
       <div className="fav-list">
         <label>List of favorites:</label>
         <ul>
-          {favTitleList.flatMap((noteTitle, index) => (
-            <li key={index}>{noteTitle}</li>
+          {notes.map(note => (
+            favNotesList.includes(note.id)? 
+            <li key={note.id}>{note.title}</li> : null
           ))}
         </ul>
       </div>

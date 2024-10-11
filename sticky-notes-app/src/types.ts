@@ -1,10 +1,10 @@
 import { StringLiteral } from "typescript";
 
 export enum Label{
-    personal = "personal",
-    study = "study",
-    work = "work",
-    other = "other",
+    personal = "Personal",
+    study = "Study",
+    work = "Work",
+    other = "Other",
 }
 
 export type Note ={
