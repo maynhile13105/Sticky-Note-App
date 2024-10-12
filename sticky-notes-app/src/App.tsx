@@ -73,6 +73,7 @@ function App() {
 
   //Update note
   const editNoteHandler = (editedNote: Note) => {
+    setFavNotesList((prev)=>prev.map((note) => note.id === editedNote.id? editedNote : note ));
     setNotes((prev)=>prev.map((note)=>editedNote.id === note.id? editedNote : note));
   };
 
@@ -90,17 +91,17 @@ function App() {
               }
               value={createNote.title}
               required
-            />
+            ></input>
           </div>
           <div>
             <textarea
               placeholder="Note Content"
-              onChange={(event) =>
+              onChange={(event) => 
                 setCreateNote({ ...createNote, content: event.target.value })
               }
               value={createNote.content}
               required
-            />
+            ></textarea>
           </div>
           <select
             value={createNote.label}
@@ -168,9 +169,8 @@ function App() {
       <div className="favList">
         <label>List of favorites:</label>
         <ul>
-          {notes.map(note => (
-            favNotesList.includes(note)? 
-            <li key={note.id}>{note.title}</li> : null
+          {favNotesList.map(note => (
+            <li key={note.id}>{note.title}</li>
           ))}
         </ul>
       </div>
