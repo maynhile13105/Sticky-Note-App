@@ -9,36 +9,36 @@ function App() {
   const [notes, setNotes] = useState<Note[]>([]);
 
   // Manage the list of favorite notes in state
-  const [favNotesList, setFavNotesList] = useState<number[]>([]);
+  const [favNotesList, setFavNotesList] = useState<Note[]>([]);
 
   // Favorite/Unfavorite Note Button
   function ClickHeart({ note }: { note: Note }) {
     // Check if the note is already a favorite initially
-    const isFav = favNotesList.includes(note.id);
-    const [favNote, setFavNote] = useState(isFav);
+    const [isFav, setIsFav] = useState(favNotesList.includes(note));
 
     const heartClick = () => {
-      setFavNote(!favNote); // Toggle the favorite state
+      setIsFav(!isFav); // Toggle the favorite state
     };
 
     useEffect(() => {
-      if (favNote && !favNotesList.includes(note.id)) {
-        // Add to favorites if not already in list
-        setFavNotesList((prev) => [...prev, note.id]);
-      } else if (!favNote && favNotesList.includes(note.id) ) {
-        // Remove from favorites
-        setFavNotesList((prev) => prev.filter((checkedNote) => checkedNote !== note.id));
-
+      if(isFav && !favNotesList.includes(note))
+      {
+        setFavNotesList((prev)=>[...prev, note]);
       }
-    }, [favNote, note.id, favNotesList]);
+      else if(!isFav && favNotesList.includes(note))
+      {
+        setFavNotesList((prev)=>prev.filter((noteChecking) => noteChecking !== note));
+      }
+      
+    }, [isFav]);
 
     return (
       <button
         id="heart"
         onClick={heartClick}
-        style={{ color: favNote ? 'red' : 'black' }}
+        style={{ color: isFav ? 'red' : 'black' }}
       >
-        {favNote ? '❤' : '♡'}
+        {isFav ? '❤' : '♡'}
       </button>
     );
   }
@@ -66,8 +66,8 @@ function App() {
   const deleteNoteHandler = (delNote: Note) => {
     setNotes((prevNotes) => prevNotes.filter((note) => note.id !== delNote.id));
     //Delete if it is also in favorite list
-    if(favNotesList.includes(delNote.id)){
-      setFavNotesList((prevNotes) => prevNotes.filter((note) => note !== delNote.id))
+    if(favNotesList.includes(delNote)){
+      setFavNotesList((prevNotes) => prevNotes.filter((note) => note !== delNote))
     }
   };
 
@@ -165,11 +165,11 @@ function App() {
         ))}
       </div>
       
-      <div className="fav-list">
+      <div className="favList">
         <label>List of favorites:</label>
         <ul>
           {notes.map(note => (
-            favNotesList.includes(note.id)? 
+            favNotesList.includes(note)? 
             <li key={note.id}>{note.title}</li> : null
           ))}
         </ul>
