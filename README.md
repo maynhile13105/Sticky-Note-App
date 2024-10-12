@@ -3,7 +3,7 @@
 
 <h2> Task 2: Create a simple web app for "sticky notes". </h2>
 
-In this lab, we can: 
+In this task, we can: 
 <li> Create a sticky note
 <li> Toggle like and dislike for a note. 
 <li> Show the list of titles updating accordingly.
